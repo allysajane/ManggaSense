@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ManggaSense | Welcome</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        /* ========================= BACKGROUND ========================= */
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(
+                135deg,
+                #a6e6cf,
+                #A9DCCB,
+                #efed7b,
+                #BFE5D8
+            );
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+
+        /* ========================= BRANDING / TITLE ========================= */
+
+        .title-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 25px 35px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(40, 109, 99, 0.12);
+        }
+
+        .title-container h1 {
+            font-size: 50px;
+            font-weight: 800;
+            color: #286D63;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        /* SYSTEM SUBHEADING */
+
+        .title-container p {
+            font-size: 16px;
+            font-style:italic;
+            font-weight: 500;
+            color: #245F58;
+            line-height: 1.8;
+        }
+
+        /* ========================= WHITE LOGIN CONTAINER ========================= */
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #FFFFFF;
+            border-radius: 25px;
+            padding: 45px 50px;
+            box-shadow: 0 12px 40px
+                rgba(54, 112, 97, 0.15);
+            align-items: center;
+        }
+
+        /* ========================= LOGIN / REGISTER SECTION ========================= */
+
+        .form-section {
+            width: 100%;
+        }
+
+        .form-section h2 {
+            color: #286D63;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #78958D;
+            font-size: 13px;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* ========================= LOGIN AND REGISTER TABS ========================= */
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+
+            margin-bottom: 30px;
+        }
+
+        .tabs button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #E2F3EC;
+            color: #286D63;
+            font-size: 16px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .tabs button.active {
+            background: #8BBDB0;
+            color: #FFFFFF;
+        }
+
+        .tabs button:hover {
+            background: #BFE5D8;
+            color: #245F58;
+        }
+
+        /* ========================= FORM INPUTS ========================= */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #365F56;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            padding: 14px;
+
+            border: 1px solid #D6EAE1;
+            border-radius: 10px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            background: #FAFDFC;
+            color: #365F56;
+
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #8BBDB0;
+
+            box-shadow: 0 0 0 3px
+                rgba(139, 189, 176, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: #9AAFA7;
+        }
+
+        /* ========================= SUBMIT BUTTON ========================= */
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #619C8D;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #477F72;
+        }
+
+        /* ========================= HIDDEN FORM ========================= */
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ========================= FOOTER ========================= */
+
+        .footer {
+            text-align: center;
+
+            color: #91A69E;
+            font-size: 12px;
+
+            margin-top: 35px;
+        }
+
+        /* ========================= RESPONSIVE DESIGN ========================= */
+
+        @media (max-width: 500px) {
+
+            body {
+                padding: 30px 15px;
+            }
+
+            .title-container h1 {
+                font-size: 25px;
+            }
+
+            .title-container p {
+                font-size: 13px;
+                padding: 0 10px;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .form-section h2 {
+                font-size: 26px;
+            }
+
+            .tabs button {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+        }
+
+        /* SMALL MOBILE SCREENS */
+
+        @media (max-width: 400px) {
+
+            .title-container h1 {
+                font-size: 25px;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .form-group input {
+                padding: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ========================= BRANDING / TITLE ========================= -->
+
+    <div class="title-container">
+        <h1>ManggaSense</h1>
+        <p>"Mango Quality Grading and Harvest Timing Alert System"</p>
+        <div class="title-line"></div>
+    </div>
+
+    <!-- ========================= WHITE LOGIN CONTAINER ========================= -->
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Let's Make Every Harvest Better!</h2>
+            <p class="subtitle">
+                Bringing better mango quality insights closer to you.
+            </p>
+
+            <!-- LOGIN AND REGISTER TABS -->
+
+            <div class="tabs">
+
+                <button
+                    type="button"
+                    id="loginTab"
+                    class="active"
+                    onclick="showLogin()"
+                >
+                    Login
+                </button>
+
+                <button
+                    type="button"
+                    id="registerTab"
+                    onclick="showRegister()"
+                >
+                    Register
+                </button>
+
+            </div>
+
+            <!-- ========================= LOGIN FORM ========================= -->
+
+            <form
+                id="loginForm"
+                onsubmit="event.preventDefault(); alert('Login interface preview only. Authentication will be connected later.');"
+            >
+
+                <div class="form-group">
+
+                    <label>Email Address:</label>
+
+                    <input
+                        type="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Password:</label>
+
+                    <input
+                        type="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+            <!-- ========================= REGISTRATION FORM ========================= -->
+
+            <form
+                id="registerForm"
+                class="hidden"
+                onsubmit="event.preventDefault(); alert('Registration interface preview only. Account creation will be connected later.');"
+            >
+
+                <div class="form-group">
+
+                    <label>Full Name:</label>
+
+                    <input
+                        type="text"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Email Address:</label>
+
+                    <input
+                        type="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Password:</label>
+
+                    <input
+                        type="password"
+                        placeholder="Create a password"
+                        minlength="8"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Confirm Password:</label>
+
+                    <input
+                        type="password"
+                        placeholder="Confirm your password"
+                        minlength="8"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+            <!-- ========================= FOOTER ========================= -->
+
+            <div class="footer">
+
+                © 2026 ManggaSense | Mango Monitoring System
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= JAVASCRIPT LOGIN / REGISTER SWITCHING ========================= -->
+
+    <script>
+
+        function showLogin() {
+
+            document.getElementById("loginForm")
+                .classList.remove("hidden");
+
+            document.getElementById("registerForm")
+                .classList.add("hidden");
+
+            document.getElementById("loginTab")
+                .classList.add("active");
+
+            document.getElementById("registerTab")
+                .classList.remove("active");
+
+        }
+
+        function showRegister() {
+
+            document.getElementById("registerForm")
+                .classList.remove("hidden");
+
+            document.getElementById("loginForm")
+                .classList.add("hidden");
+
+            document.getElementById("registerTab")
+                .classList.add("active");
+
+            document.getElementById("loginTab")
+                .classList.remove("active");
+
+        }
+
+    </script>
+
+</body>
+
+</html>
