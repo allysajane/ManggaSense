@@ -1,0 +1,462 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ManggaSense | Dashboard</title>
+
+    <style>
+/* ========================= GENERAL STYLING ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+/* ========================= BACKGROUND ========================= */
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(
+                135deg,
+                #a6e6cf,
+                #A9DCCB,
+                #efed7b,
+                #bfe5d8
+            );
+            padding: 35px 20px;
+            color: #365F56;
+        }
+
+/* ========================= MAIN CONTAINER ========================= */
+
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: auto;
+            background: white;
+            padding: 12px;
+            border-radius: 22px;
+            box-shadow: 0 12px 35px rgba(40, 109, 99, 0.15);
+        }
+
+/* ========================= HEADER ========================= */
+
+        .header {
+            position: relative;
+            text-align: center;
+            padding: 30px 20px;
+            border-bottom: 2px solid #D6EAE1;
+        }
+
+        .header h1 {
+            color: #286D63;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #78958D;
+            font-size: 16px;
+            font-style: italic;
+        }
+
+/* ========================= LOGOUT BUTTON ========================= */
+
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #619C8D;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .logout-button:hover {
+            background: #286D63;
+            transform: translateY(-2px);
+        }
+
+/* ========================= DASHBOARD CONTENT ========================= */
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 0.7fr 1.3fr;
+            gap: 20px;
+            background: #FAFDFC;
+            border: 2px solid #D6EAE1;
+            border-radius: 18px;
+            margin: 20px;
+            padding: 25px;
+        }
+
+/* ========================= LEFT SIDE - WELCOME ========================= */
+
+        .welcome-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 35px 25px;
+            border-right: 2px solid #D6EAE1;
+        }
+
+        .welcome-section h2 {
+            color: #286D63;
+            font-size: 30px;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .welcome-section p {
+            color: #78958D;
+            font-size: 17px;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        /* ========================= RIGHT SIDE - OVERVIEW ========================= */
+
+        .overview-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            min-width: 0;
+        }
+
+        .section-title {
+            width: 100%;
+            text-align: center;
+            color: #286D63;
+            font-size: 23px;
+            background: white;
+            border: 2px solid #8BBDB0;
+            border-radius: 9px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* ========================= DASHBOARD CARDS ========================= */
+
+        .dashboard-cards {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .card {
+            width: 100%;
+            min-height: 115px;
+            background: white;
+            border: 2px solid #8BBDB0;
+            border-radius: 13px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(40, 109, 99, 0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(40, 109, 99, 0.15);
+        }
+
+        .card h3 {
+            color: #286D63;
+            font-size: 19px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #78958D;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* ========================= RESPONSIVE DESIGN ========================= */
+
+        @media (max-width: 750px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .header {
+                padding: 75px 15px 25px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header p {
+                font-size: 13px;
+            }
+
+            .logout-button {
+                top: 12px;
+                right: 12px;
+                padding: 9px 15px;
+            }
+
+            .dashboard-content {
+                grid-template-columns: 1fr;
+                margin: 12px;
+                padding: 18px;
+            }
+
+            .welcome-section {
+                border-right: none;
+                border-bottom: 2px solid #D6EAE1;
+                padding: 25px 15px;
+                text-align: center;
+                align-items: center;
+            }
+
+            .welcome-section h2 {
+                font-size: 25px;
+            }
+
+            .welcome-section p {
+                font-size: 15px;
+            }
+
+            .overview-section {
+                padding: 10px 0;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .card {
+                min-height: 110px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ========================= MAIN CONTAINER ========================= -->
+
+    <main class="main-container">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <button
+                type="button"
+                class="logout-button"
+                onclick="logout()">
+                Logout
+            </button>
+
+            <h1>ManggaSense</h1>
+
+            <p>
+                Mango Quality Grading and Harvest Timing Alert System
+            </p>
+
+        </header>
+
+        <!-- ========================= DASHBOARD CONTENT ========================= -->
+
+        <section class="dashboard-content">
+
+            <!-- LEFT COLUMN: WELCOME MESSAGE -->
+
+            <div class="welcome-section">
+
+                <h2>
+                    Welcome, <span id="userName">Grower</span>!
+                </h2>
+
+                <p>
+                    Monitor mango quality, track harvest timing,
+                    and manage your mango production.
+                </p>
+
+            </div>
+
+            <!-- RIGHT COLUMN: DASHBOARD OVERVIEW -->
+
+            <div class="overview-section">
+
+                <h2 class="section-title">
+                    Dashboard Overview
+                </h2>
+
+                <div class="dashboard-cards">
+
+                    <!-- CARD 1 -->
+
+                    <div class="card">
+
+                        <h3>Mango Quality Grading</h3>
+
+                        <p>
+                            View and manage mango quality grading information.
+                        </p>
+
+                    </div>
+
+                    <!-- CARD 2 -->
+
+                    <div class="card">
+
+                        <h3>Harvest Timing Alerts</h3>
+
+                        <p>
+                            Monitor harvest schedules and upcoming harvest alerts.
+                        </p>
+
+                    </div>
+
+                    <!-- CARD 3 -->
+
+                    <div class="card">
+
+                        <h3>Mango Monitoring</h3>
+
+                        <p>
+                            Keep track of your mango monitoring records.
+                        </p>
+
+                    </div>
+
+                    <!-- CARD 4 -->
+
+                    <div class="card">
+
+                        <h3>Reports</h3>
+
+                        <p>
+                            View summaries of mango quality and harvest records.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ========================= JAVASCRIPT FUNCTIONS ========================= -->
+
+    <script>
+
+        // LOAD LOGGED-IN USER'S NAME
+
+        async function loadUserName() {
+
+            try {
+
+                const response = await fetch('/api/me', {
+                    credentials: 'same-origin'
+                });
+
+                if (!response.ok) {
+                    window.location.href = "/";
+                    return;
+                }
+
+                const result = await response.json();
+
+                if (result.success && result.user) {
+
+                    document.getElementById('userName').textContent =
+                        result.user.name;
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    'Unable to load user information:',
+                    error
+                );
+
+            }
+
+        }
+
+        // LOGOUT FUNCTION
+
+        async function logout() {
+
+            const confirmLogout = confirm(
+                "Are you sure you want to log out?"
+            );
+
+            if (!confirmLogout) {
+                return;
+            }
+
+            try {
+
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+
+                    window.location.replace("/");
+
+                } else {
+
+                    alert(
+                        result.message ||
+                        "Logout failed. Please try again."
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error("Logout error:", error);
+
+                alert(
+                    "Unable to connect to the server. Please try again."
+                );
+
+            }
+
+        }
+
+        // RUN WHEN DASHBOARD LOADS
+
+        loadUserName();
+
+    </script>
+
+</body>
+
+</html>

@@ -9,7 +9,6 @@
     <title>ManggaSense | Welcome</title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -17,7 +16,7 @@
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
 
-        /* ========================= BACKGROUND ========================= */
+        /* BACKGROUND */
 
         body {
             min-height: 100vh;
@@ -26,7 +25,7 @@
                 #a6e6cf,
                 #A9DCCB,
                 #efed7b,
-                #BFE5D8
+                #bfe5d8
             );
 
             display: flex;
@@ -36,7 +35,7 @@
             padding: 30px 20px;
         }
 
-        /* ========================= BRANDING / TITLE ========================= */
+        /* BRANDING / TITLE */
 
         .title-container {
             width: 100%;
@@ -57,17 +56,15 @@
             margin-bottom: 8px;
         }
 
-        /* SYSTEM SUBHEADING */
-
         .title-container p {
             font-size: 16px;
-            font-style:italic;
+            font-style: italic;
             font-weight: 500;
             color: #245F58;
             line-height: 1.8;
         }
 
-        /* ========================= WHITE LOGIN CONTAINER ========================= */
+        /* LOGIN CONTAINER */
 
         .container {
             width: 100%;
@@ -75,12 +72,10 @@
             background: #FFFFFF;
             border-radius: 25px;
             padding: 45px 50px;
-            box-shadow: 0 12px 40px
-                rgba(54, 112, 97, 0.15);
-            align-items: center;
+            box-shadow: 0 12px 40px rgba(54, 112, 97, 0.15);
         }
 
-        /* ========================= LOGIN / REGISTER SECTION ========================= */
+        /* FORM SECTION */
 
         .form-section {
             width: 100%;
@@ -102,13 +97,12 @@
             margin-bottom: 30px;
         }
 
-        /* ========================= LOGIN AND REGISTER TABS ========================= */
+        /* TABS */
 
         .tabs {
             display: flex;
             gap: 12px;
-
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .tabs button {
@@ -134,7 +128,7 @@
             color: #245F58;
         }
 
-        /* ========================= FORM INPUTS ========================= */
+        /* FORM INPUTS */
 
         .form-group {
             margin-bottom: 20px;
@@ -150,34 +144,26 @@
 
         .form-group input {
             width: 100%;
-
             padding: 14px;
-
             border: 1px solid #D6EAE1;
             border-radius: 10px;
-
             outline: none;
-
             font-size: 14px;
-
             background: #FAFDFC;
             color: #365F56;
-
             transition: 0.3s;
         }
 
         .form-group input:focus {
             border-color: #8BBDB0;
-
-            box-shadow: 0 0 0 3px
-                rgba(139, 189, 176, 0.15);
+            box-shadow: 0 0 0 3px rgba(139, 189, 176, 0.15);
         }
 
         .form-group input::placeholder {
             color: #9AAFA7;
         }
 
-        /* ========================= SUBMIT BUTTON ========================= */
+        /* SUBMIT BUTTON */
 
         .submit-btn {
             width: 100%;
@@ -197,24 +183,53 @@
             background: #477F72;
         }
 
-        /* ========================= HIDDEN FORM ========================= */
+        .submit-btn:disabled {
+            background: #A9C9BE;
+            cursor: not-allowed;
+        }
+
+        /* RESPONSE MESSAGE */
+
+        .message {
+            display: none;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .message.success {
+            display: block;
+            background: #E2F3EC;
+            color: #286D63;
+            border: 1px solid #BFE5D8;
+        }
+
+        .message.error {
+            display: block;
+            background: #FCEAEA;
+            color: #A94442;
+            border: 1px solid #EBCACA;
+        }
+
+        /* HIDDEN FORM */
 
         .hidden {
             display: none !important;
         }
 
-        /* ========================= FOOTER ========================= */
+        /* FOOTER */
 
         .footer {
             text-align: center;
-
             color: #91A69E;
             font-size: 12px;
-
             margin-top: 35px;
         }
 
-        /* ========================= RESPONSIVE DESIGN ========================= */
+        /* RESPONSIVE DESIGN */
 
         @media (max-width: 500px) {
 
@@ -236,14 +251,13 @@
             }
 
             .form-section h2 {
-                font-size: 26px;
+                font-size: 22px;
             }
 
             .tabs button {
                 padding: 12px;
                 font-size: 14px;
             }
-
         }
 
         /* SMALL MOBILE SCREENS */
@@ -261,31 +275,45 @@
             .form-group input {
                 padding: 12px;
             }
-
         }
 
     </style>
-
 </head>
 
 <body>
 
-    <!-- ========================= BRANDING / TITLE ========================= -->
+    <!-- BRANDING / TITLE -->
 
     <div class="title-container">
+
         <h1>ManggaSense</h1>
-        <p>"Mango Quality Grading and Harvest Timing Alert System"</p>
-        <div class="title-line"></div>
+
+        <p>
+            "Mango Quality Grading and Harvest Timing Alert System"
+        </p>
+
     </div>
 
-    <!-- ========================= WHITE LOGIN CONTAINER ========================= -->
+    <!-- LOGIN AND REGISTRATION CONTAINER -->
 
     <div class="container">
+
         <div class="form-section">
+
             <h2>Let's Make Every Harvest Better!</h2>
+
             <p class="subtitle">
                 Bringing better mango quality insights closer to you.
             </p>
+
+            <!-- RESPONSE MESSAGE -->
+
+            <div
+                id="formMessage"
+                class="message"
+                role="status"
+                aria-live="polite"
+            ></div>
 
             <!-- LOGIN AND REGISTER TABS -->
 
@@ -310,20 +338,21 @@
 
             </div>
 
-            <!-- ========================= LOGIN FORM ========================= -->
+            <!-- LOGIN FORM -->
 
-            <form
-                id="loginForm"
-                onsubmit="event.preventDefault(); alert('Login interface preview only. Authentication will be connected later.');"
-            >
+            <form id="loginForm">
 
                 <div class="form-group">
 
-                    <label>Email Address:</label>
+                    <label for="loginEmail">Email Address:</label>
 
                     <input
                         type="email"
+                        id="loginEmail"
+                        name="email"
                         placeholder="Enter your email"
+                        autocomplete="email"
+                        maxlength="150"
                         required
                     >
 
@@ -331,11 +360,14 @@
 
                 <div class="form-group">
 
-                    <label>Password:</label>
+                    <label for="loginPassword">Password:</label>
 
                     <input
                         type="password"
+                        id="loginPassword"
+                        name="password"
                         placeholder="Enter your password"
+                        autocomplete="current-password"
                         required
                     >
 
@@ -350,21 +382,24 @@
 
             </form>
 
-            <!-- ========================= REGISTRATION FORM ========================= -->
+            <!-- REGISTRATION FORM -->
 
             <form
                 id="registerForm"
                 class="hidden"
-                onsubmit="event.preventDefault(); alert('Registration interface preview only. Account creation will be connected later.');"
             >
 
                 <div class="form-group">
 
-                    <label>Full Name:</label>
+                    <label for="registerName">Full Name:</label>
 
                     <input
                         type="text"
+                        id="registerName"
+                        name="name"
                         placeholder="Enter your full name"
+                        autocomplete="name"
+                        maxlength="100"
                         required
                     >
 
@@ -372,11 +407,15 @@
 
                 <div class="form-group">
 
-                    <label>Email Address:</label>
+                    <label for="registerEmail">Email Address:</label>
 
                     <input
                         type="email"
+                        id="registerEmail"
+                        name="email"
                         placeholder="Enter your email"
+                        autocomplete="email"
+                        maxlength="150"
                         required
                     >
 
@@ -384,11 +423,14 @@
 
                 <div class="form-group">
 
-                    <label>Password:</label>
+                    <label for="registerPassword">Password:</label>
 
                     <input
                         type="password"
+                        id="registerPassword"
+                        name="password"
                         placeholder="Create a password"
+                        autocomplete="new-password"
                         minlength="8"
                         required
                     >
@@ -397,11 +439,14 @@
 
                 <div class="form-group">
 
-                    <label>Confirm Password:</label>
+                    <label for="confirmPassword">Confirm Password:</label>
 
                     <input
                         type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
                         placeholder="Confirm your password"
+                        autocomplete="new-password"
                         minlength="8"
                         required
                     >
@@ -417,21 +462,45 @@
 
             </form>
 
-            <!-- ========================= FOOTER ========================= -->
+            <!-- FOOTER -->
 
             <div class="footer">
-
-                © 2026 ManggaSense | Mango Monitoring System
-
+                © 2026 ManggaSense
             </div>
 
         </div>
 
     </div>
 
-    <!-- ========================= JAVASCRIPT LOGIN / REGISTER SWITCHING ========================= -->
+    <!-- JAVASCRIPT -->
 
     <script>
+
+        // DISPLAY RESPONSE MESSAGE
+
+        function showMessage(message, type) {
+
+            const messageBox = document.getElementById("formMessage");
+
+            messageBox.textContent = message;
+
+            messageBox.className = "message " + type;
+
+        }
+
+        // CLEAR RESPONSE MESSAGE
+
+        function clearMessage() {
+
+            const messageBox = document.getElementById("formMessage");
+
+            messageBox.textContent = "";
+
+            messageBox.className = "message";
+
+        }
+
+        // SWITCH TO LOGIN FORM
 
         function showLogin() {
 
@@ -447,7 +516,11 @@
             document.getElementById("registerTab")
                 .classList.remove("active");
 
+            clearMessage();
+
         }
+
+        // SWITCH TO REGISTRATION FORM
 
         function showRegister() {
 
@@ -463,10 +536,187 @@
             document.getElementById("loginTab")
                 .classList.remove("active");
 
+            clearMessage();
+
         }
+
+        // ========================= USER REGISTRATION =========================
+
+        document.getElementById("registerForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+                const name = document.getElementById("registerName").value.trim();
+
+                const email = document.getElementById("registerEmail").value.trim();
+
+                const password = document.getElementById("registerPassword").value;
+
+                const confirmPassword = document.getElementById("confirmPassword").value;
+
+                const submitButton = this.querySelector(".submit-btn");
+
+                // CHECK PASSWORD CONFIRMATION
+
+                if (password !== confirmPassword) {
+
+                    showMessage("Passwords do not match.", "error");
+
+                    return;
+
+                }
+
+                submitButton.disabled = true;
+
+                submitButton.textContent = "Creating Account...";
+
+                clearMessage();
+
+                try {
+
+                    const response = await fetch("/api/register", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            name,
+                            email,
+                            password,
+                            confirmPassword
+                        })
+
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+
+                        // SAVE EMAIL FOR LOGIN
+
+                        document.getElementById("loginEmail").value = email;
+
+                        // CLEAR REGISTRATION FIELDS
+
+                        this.reset();
+
+                        // SWITCH TO LOGIN
+
+                        showLogin();
+
+                        showMessage(result.message, "success");
+
+                    } else {
+
+                        showMessage(
+                            result.message || "Registration failed.",
+                            "error"
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error("Registration error:", error);
+
+                    showMessage(
+                        "Unable to connect to the server. Please try again.",
+                        "error"
+                    );
+
+                } finally {
+
+                    submitButton.disabled = false;
+
+                    submitButton.textContent = "Create Account";
+
+                }
+
+            });
+
+        // ========================= USER LOGIN =========================
+
+        document.getElementById("loginForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+                const email = document.getElementById("loginEmail").value.trim();
+
+                const password = document.getElementById("loginPassword").value;
+
+                const submitButton = this.querySelector(".submit-btn");
+
+                submitButton.disabled = true;
+
+                submitButton.textContent = "Logging In...";
+
+                clearMessage();
+
+                try {
+
+                    const response = await fetch("/api/login", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        credentials: "same-origin",
+
+                        body: JSON.stringify({
+                            email,
+                            password
+                        })
+
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+
+                        console.log("Logged in user:", result.user);
+
+                        // REDIRECT TO DASHBOARD AFTER SUCCESSFUL LOGIN
+
+                        window.location.href = "/dashboard.html";
+
+                        return;
+
+                    } else {
+
+                        showMessage(
+                            result.message || "Login failed.",
+                            "error"
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error("Login error:", error);
+
+                    showMessage(
+                        "Unable to connect to the server. Please try again.",
+                        "error"
+                    );
+
+                } finally {
+
+                    submitButton.disabled = false;
+
+                    submitButton.textContent = "Login";
+
+                }
+
+            });
 
     </script>
 
 </body>
-
 </html>
