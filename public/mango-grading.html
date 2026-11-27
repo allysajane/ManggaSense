@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManggaSense | Mango Quality Grading</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 35px 15px;
+            background: linear-gradient(135deg, #a6e6cf, #efed7b);
+            color: #245F58;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+            padding: 35px;
+            background: white;
+            border: 2px solid #D6EAE1;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(40, 109, 99, 0.12);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #286D63;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #619C8D;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 22px;
+            color: #286D63;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: bold;
+            color: #286D63;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #BFE5D8;
+            border-radius: 9px;
+            font-size: 15px;
+            background: #FAFDFC;
+            color: #245F58;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: 2px solid #8BBDB0;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 22px;
+            text-align: center;
+            background: #EAF7F1;
+            border: 2px solid #BFE5D8;
+            border-radius: 14px;
+        }
+
+        .result-box h2 {
+            font-size: 19px;
+            margin-bottom: 10px;
+        }
+
+        #gradeResult {
+            font-size: 30px;
+            font-weight: bold;
+            color: #286D63;
+        }
+
+        #gradeDescription {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: #619C8D;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4F887A;
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .clear-button {
+            background: #A9DCCB;
+            color: #245F58;
+        }
+
+        .clear-button:hover {
+            background: #8BBDB0;
+        }
+
+        .records-button {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            padding: 13px;
+            border-radius: 9px;
+            background: #286D63;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .records-button:hover {
+            background: #245F58;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #message {
+            margin-top: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #66877F;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 22px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="/dashboard.html" class="back-button">
+        ← Back to Dashboard
+    </a>
+
+    <header>
+        <h1>Mango Quality Grading</h1>
+        <p>Enter mango characteristics to determine its quality grade.</p>
+    </header>
+
+    <form id="gradingForm">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="mangoVariety">Mango Variety</label>
+                <input
+                    type="text"
+                    id="mangoVariety"
+                    placeholder="e.g. Carabao"
+                    maxlength="100"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="weight">Weight (grams)</label>
+                <input
+                    type="number"
+                    id="weight"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="Enter mango weight"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="maturityLevel">Maturity Level</label>
+                <select id="maturityLevel" required>
+                    <option value="">Select maturity level</option>
+                    <option value="Unripe">Unripe</option>
+                    <option value="Turning">Turning</option>
+                    <option value="Mature">Mature</option>
+                    <option value="Overripe">Overripe</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="skinColor">Skin Color</label>
+                <select id="skinColor" required>
+                    <option value="">Select skin color</option>
+                    <option value="Green">Green</option>
+                    <option value="Turning Yellow">Turning Yellow</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Golden Yellow">Golden Yellow</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="defects">Visible Defects</label>
+                <select id="defects" required>
+                    <option value="">Select defect condition</option>
+                    <option value="None">No visible defects</option>
+                    <option value="Minor">Minor defects</option>
+                    <option value="Moderate">Moderate defects</option>
+                    <option value="Severe">Severe defects</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="result-box">
+            <h2>Automatic Quality Assessment</h2>
+            <div id="gradeResult">Not Graded</div>
+            <p id="gradeDescription">
+                Complete the form to calculate the quality grade.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" id="saveButton">
+                Save Grading Result
+            </button>
+
+            <button type="reset" class="clear-button">
+                Clear Form
+            </button>
+        </div>
+
+        <p id="message"></p>
+
+        <!-- VIEW GRADING RECORDS BUTTON -->
+        <a href="/mango-records.html"
+           id="viewRecordsButton"
+           class="records-button hidden">
+            View Grading Records
+        </a>
+
+        <p class="note">
+            Note: These are preliminary prototype rules, not an official
+            agricultural grading standard. Skin color varies by mango variety.
+            The result is a rule-based estimate and should be validated using
+            actual mango samples.
+        </p>
+
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById("gradingForm");
+    const gradeResult = document.getElementById("gradeResult");
+    const gradeDescription = document.getElementById("gradeDescription");
+    const message = document.getElementById("message");
+    const saveButton = document.getElementById("saveButton");
+    const viewRecordsButton = document.getElementById("viewRecordsButton");
+
+    let calculatedGrade = "";
+
+    function calculateGrade() {
+        const maturity = document.getElementById("maturityLevel").value;
+        const defects = document.getElementById("defects").value;
+        const skinColor = document.getElementById("skinColor").value;
+
+        if (!maturity || !defects || !skinColor) {
+            calculatedGrade = "";
+            gradeResult.textContent = "Not Graded";
+            gradeDescription.textContent =
+                "Complete the required fields to calculate the grade.";
+            return;
+        }
+
+        if (
+            defects === "Severe" ||
+            maturity === "Unripe" ||
+            maturity === "Overripe"
+        ) {
+            calculatedGrade = "Grade C";
+
+            gradeDescription.textContent =
+                "The mango has characteristics associated with lower quality.";
+
+        } else if (
+            maturity === "Mature" &&
+            (skinColor === "Yellow" ||
+             skinColor === "Golden Yellow") &&
+            defects === "None"
+        ) {
+            calculatedGrade = "Grade A";
+
+            gradeDescription.textContent =
+                "The mango meets the prototype's highest quality criteria.";
+
+        } else {
+            calculatedGrade = "Grade B";
+
+            gradeDescription.textContent =
+                "The mango meets the prototype's intermediate quality criteria.";
+        }
+
+        gradeResult.textContent = calculatedGrade;
+    }
+
+    ["maturityLevel", "skinColor", "defects"].forEach(id => {
+        document.getElementById(id).addEventListener(
+            "change",
+            calculateGrade
+        );
+    });
+
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        calculateGrade();
+
+        if (!calculatedGrade) {
+            message.textContent = "Please complete all required fields.";
+            return;
+        }
+
+        const gradingData = {
+            mango_variety: document.getElementById("mangoVariety").value.trim(),
+            weight: document.getElementById("weight").value,
+            maturity_level: document.getElementById("maturityLevel").value,
+            skin_color: document.getElementById("skinColor").value,
+            defects: document.getElementById("defects").value,
+            quality_grade: calculatedGrade
+        };
+
+        if (
+            !gradingData.mango_variety ||
+            !gradingData.weight ||
+            Number(gradingData.weight) <= 0
+        ) {
+            message.textContent = "Please enter a valid variety and weight.";
+            return;
+        }
+
+        message.style.color = "#286D63";
+        message.textContent = "Saving grading record...";
+        saveButton.disabled = true;
+
+        try {
+            const response = await fetch("/api/mango-grading", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(gradingData)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    result.message || "Unable to save record."
+                );
+            }
+
+            message.textContent =
+                result.message || "Mango grading record saved successfully!";
+
+            message.style.color = "#286D63";
+
+            // SHOW VIEW RECORDS BUTTON AFTER SUCCESSFUL SAVE
+            viewRecordsButton.classList.remove("hidden");
+
+        } catch (error) {
+            message.textContent = error.message;
+            message.style.color = "#B54747";
+
+        } finally {
+            saveButton.disabled = false;
+        }
+    });
+
+    form.addEventListener("reset", function() {
+        calculatedGrade = "";
+
+        gradeResult.textContent = "Not Graded";
+
+        gradeDescription.textContent =
+            "Complete the form to calculate the quality grade.";
+
+        message.textContent = "";
+
+        // HIDE THE RECORDS BUTTON WHEN CLEARING THE FORM
+        viewRecordsButton.classList.add("hidden");
+    });
+</script>
+
+</body>
+</html>

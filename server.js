@@ -35,6 +35,28 @@ app.get('/dashboard.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
+ // PROTECT MANGO GRADING PAGE
+app.get('/mango-grading.html', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+
+    res.sendFile(
+        path.join(__dirname, 'public', 'mango-grading.html')
+    );
+});
+
+// PROTECT MANGO RECORDS PAGE
+app.get('/mango-records.html', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+
+    res.sendFile(
+        path.join(__dirname, 'public', 'mango-records.html')
+    );
+});
+
 // Serve public files AFTER dashboard protection
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -247,6 +269,138 @@ app.get('/api/me', (req, res) => {
         success: true,
         user: req.session.user
     });
+});
+
+// SAVE MANGO GRADING RECORD
+app.post('/api/mango-grading', async (req, res) => {
+        try {
+            //Check if the user is logged in
+            if (!req.session.user) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Please log in to submit a mango grading record.'
+                });
+            }
+
+            const {
+                mango_variety,
+                weight,
+                maturity_level,
+                skin_color,
+                defects,
+                quality_grade
+            } = req.body;
+
+            //Validate required fields
+            if (
+                !mango_variety ||
+                weight === undefined ||
+                weight === null ||
+                weight === '' ||
+                !maturity_level ||
+                !skin_color ||
+                !quality_grade
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Please complete all required grading fields.'
+                });
+            }
+
+            const cleanVariety = String(mango_variety).trim();
+            const cleanMaturity = String(maturity_level).trim();
+            const cleanSkinColor = String(skin_color).trim();
+            const cleanGrade = String(quality_grade).trim();
+
+            const mangoWeight =  Number(weight);
+
+            if (
+                !cleanVariety ||
+                !cleanMaturity ||
+                !cleanSkinColor ||
+                !cleanGrade ||
+                cleanVariety.length > 100 ||
+                !Number.isFinite(mangoWeight) ||
+                mangoWeight <= 0 ||
+                mangoWeight > 99999999
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Please enter valid mango grading information.'
+                });
+            }
+
+            // Insert grading record into the database
+            await db.query(
+                `INSERT INTO mango_grading(user_id, mango_variety, weight, maturity_level, skin_color, defects, quality_grade)
+                VALUES
+                (?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    req.session.user.id,
+                    cleanVariety,
+                    mangoWeight,
+                    cleanMaturity,
+                    cleanSkinColor,
+                    defects ? String(defects).trim() : null,
+                    cleanGrade
+                ]
+            );
+
+            res.status(201).json({
+                success: true,
+                message: 'Mango grading record saved successfully!'
+            });
+        } catch (error) {
+            console.error('Mango grading error:', error);
+
+            res.status(500).json({
+                success: false,
+                message: 'Unable to save mango grading record.'
+            });
+        }
+    });
+
+ // GET MANGO GRADING RECORDS
+app.get('/api/mango-grading', async (req, res) => {
+    try {
+        // Check if user is logged in
+        if (!req.session.user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Please log in to view grading records.'
+            });
+        }
+
+        // Retrieve only the logged-in user's records
+        const [records] = await db.query(
+            `SELECT
+                id,
+                mango_variety,
+                weight,
+                maturity_level,
+                skin_color,
+                defects,
+                quality_grade,
+                created_at
+            FROM mango_grading
+            WHERE user_id = ?
+            ORDER BY created_at DESC`,
+            [req.session.user.id]
+        );
+
+        res.json({
+            success: true,
+            records: records
+        });
+
+    } catch (error) {
+        console.error('Retrieve grading records error:', error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Unable to retrieve mango grading records.'
+        });
+    }
 });
 
 // USER LOGOUT
