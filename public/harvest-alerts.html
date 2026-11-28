@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManggaSense | Harvest Timing Alerts</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #a6e6cf, #efed7b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        h1 {
+            text-align: center;
+            color: #28634d;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #315c49;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #b8d9c9;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button, .back-button {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #4c9b76;
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button:hover, .back-button:hover {
+            background: #367c5b;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #effaf3;
+            border: 1px solid #b8ddc5;
+            border-radius: 12px;
+            line-height: 1.8;
+        }
+
+        .result h2 {
+            color: #28634d;
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 10px;
+        }
+
+        .note {
+            margin-top: 20px;
+            color: #777;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Harvest Timing Alerts</h1>
+
+        <p class="subtitle">
+            Monitor your mango flowering dates and estimated harvest schedule.
+        </p>
+
+        <form id="harvestForm">
+
+            <div class="form-group">
+                <label for="mangoVariety">Mango Variety</label>
+                <select id="mangoVariety" required>
+                    <option value="">Select Mango Variety</option>
+                    <option value="Carabao">Carabao</option>
+                    <option value="Indian Mango">Indian Mango</option>
+                    <option value="Pico">Pico</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="floweringDate">Flowering Date</label>
+                <input type="date" id="floweringDate" required>
+            </div>
+
+            <button type="submit">Calculate Harvest Date</button>
+
+        </form>
+
+        <div class="result" id="result">
+            <h2>Harvest Schedule</h2>
+            <p><strong>Mango Variety:</strong> <span id="displayVariety"></span></p>
+            <p><strong>Flowering Date:</strong> <span id="displayFlowering"></span></p>
+            <p><strong>Estimated Harvest Date:</strong> <span id="displayHarvest"></span></p>
+            <p><strong>Status:</strong> <span id="displayStatus"></span></p>
+        </div>
+
+        <p class="note">
+            Note: The 120-day period is a preliminary example estimate, not a
+            validated harvest recommendation. Actual harvest timing varies by
+            mango variety, growing conditions, and fruit maturity. Check the
+            fruit before deciding to harvest.
+        </p>
+
+        <div class="button-group">
+            <a href="/dashboard.html" class="back-button">← Back</a>
+        </div>
+
+    </div>
+
+    <script>
+        const harvestForm = document.getElementById("harvestForm");
+
+        harvestForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const variety = document.getElementById("mangoVariety").value;
+            const floweringDate = document.getElementById("floweringDate").value;
+
+            if (!variety || !floweringDate) {
+                alert("Please complete all fields.");
+                return;
+            }
+
+            const flowering = new Date(floweringDate + "T00:00:00");
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (flowering > today) {
+                alert("Please select a flowering date that is not in the future.");
+                return;
+            }
+
+            const harvest = new Date(flowering);
+            harvest.setDate(harvest.getDate() + 120);
+
+            const formatDate = date => date.toLocaleDateString("en-PH", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            });
+
+            let status;
+
+            if (today < harvest) {
+                status = "Upcoming Harvest";
+            } else {
+                status = "Estimated Date Reached - Check Fruit Maturity";
+            }
+
+            document.getElementById("displayVariety").textContent = variety;
+            document.getElementById("displayFlowering").textContent = formatDate(flowering);
+            document.getElementById("displayHarvest").textContent = formatDate(harvest);
+            document.getElementById("displayStatus").textContent = status;
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+
+</body>
+</html>

@@ -9,7 +9,7 @@
     <title>ManggaSense | Dashboard</title>
 
     <style>
-/* ========================= GENERAL STYLING ========================= */
+        /* ========================= GENERAL STYLING ========================= */
 
         * {
             margin: 0;
@@ -18,7 +18,7 @@
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
 
-/* ========================= BACKGROUND ========================= */
+        /* ========================= BACKGROUND ========================= */
 
         body {
             min-height: 100vh;
@@ -33,7 +33,7 @@
             color: #365F56;
         }
 
-/* ========================= MAIN CONTAINER ========================= */
+        /* ========================= MAIN CONTAINER ========================= */
 
         .main-container {
             max-width: 1200px;
@@ -45,7 +45,7 @@
             box-shadow: 0 12px 35px rgba(40, 109, 99, 0.15);
         }
 
-/* ========================= HEADER ========================= */
+        /* ========================= HEADER ========================= */
 
         .header {
             position: relative;
@@ -66,7 +66,7 @@
             font-style: italic;
         }
 
-/* ========================= LOGOUT BUTTON ========================= */
+        /* ========================= LOGOUT BUTTON ========================= */
 
         .logout-button {
             position: absolute;
@@ -88,7 +88,7 @@
             transform: translateY(-2px);
         }
 
-/* ========================= DASHBOARD CONTENT ========================= */
+        /* ========================= DASHBOARD CONTENT ========================= */
 
         .dashboard-content {
             display: grid;
@@ -99,9 +99,10 @@
             border-radius: 18px;
             margin: 20px;
             padding: 25px;
+            align-items: stretch;
         }
 
-/* ========================= LEFT SIDE - WELCOME ========================= */
+        /* ========================= LEFT SIDE - WELCOME ========================= */
 
         .welcome-section {
             display: flex;
@@ -316,6 +317,8 @@
                     Dashboard Overview
                 </h2>
 
+                <!-- ALL DASHBOARD CARDS INSIDE ONE CONTAINER -->
+
                 <div class="dashboard-cards">
 
                     <!-- CARD 1 -->
@@ -329,11 +332,10 @@
                         </p>
 
                     </a>
-                </div>
 
                     <!-- CARD 2 -->
 
-                    <div class="card">
+                    <a href="/harvest-alerts.html" class="card">
 
                         <h3>Harvest Timing Alerts</h3>
 
@@ -341,11 +343,11 @@
                             Monitor harvest schedules and upcoming harvest alerts.
                         </p>
 
-                    </div>
+                    </a>
 
                     <!-- CARD 3 -->
 
-                    <div class="card">
+                    <a href="/mango-monitoring.html" class="card">
 
                         <h3>Mango Monitoring</h3>
 
@@ -353,11 +355,11 @@
                             Keep track of your mango monitoring records.
                         </p>
 
-                    </div>
+                    </a>
 
                     <!-- CARD 4 -->
 
-                    <div class="card">
+                    <a href="/reports.html" class="card">
 
                         <h3>Reports</h3>
 
@@ -365,7 +367,7 @@
                             View summaries of mango quality and harvest records.
                         </p>
 
-                    </div>
+                    </a>
 
                 </div>
 

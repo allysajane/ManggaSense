@@ -1,3 +1,4 @@
+
 const express = require('express');
 const path = require('path');
 const bcrypt = require('bcryptjs');
@@ -9,22 +10,34 @@ require('dotenv').config();
 const app = express();
 
 
-// Middleware
+// =========================
+// MIDDLEWARE
+// =========================
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Session configuration
+
+// =========================
+// SESSION CONFIGURATION
+// =========================
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        secure: false, // For Localhost development
+        secure: false,
         sameSite: 'lax',
         maxAge: 1000 * 60 * 60 * 2
     }
 }));
+
+
+// =========================
+// PROTECTED PAGE ROUTES
+// =========================
 
 // PROTECT DASHBOARD PAGE
 app.get('/dashboard.html', (req, res) => {
@@ -35,7 +48,8 @@ app.get('/dashboard.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
- // PROTECT MANGO GRADING PAGE
+
+// PROTECT MANGO GRADING PAGE
 app.get('/mango-grading.html', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/');
@@ -45,6 +59,7 @@ app.get('/mango-grading.html', (req, res) => {
         path.join(__dirname, 'public', 'mango-grading.html')
     );
 });
+
 
 // PROTECT MANGO RECORDS PAGE
 app.get('/mango-records.html', (req, res) => {
@@ -57,11 +72,35 @@ app.get('/mango-records.html', (req, res) => {
     );
 });
 
-// Serve public files AFTER dashboard protection
-app.use(express.static(path.join(__dirname, 'public')));
+
+// PROTECT HARVEST ALERTS PAGE
+app.get('/harvest-alerts.html', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+
+    res.sendFile(
+        path.join(__dirname, 'public', 'harvest-alerts.html')
+    );
+});
 
 
-// DATABASE AND SERVER HEALTH CHECK
+// PROTECT MANGO MONITORING PAGE
+app.get('/mango-monitoring.html', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+
+    res.sendFile(
+        path.join(__dirname, 'public', 'mango-monitoring.html')
+    );
+});
+
+
+// =========================
+// DATABASE HEALTH CHECK
+// =========================
+
 app.get('/api/health', async (req, res) => {
     try {
         await db.query('SELECT 1');
@@ -77,12 +116,16 @@ app.get('/api/health', async (req, res) => {
 
         res.status(500).json({
             status: 'error',
-            message: 'Database connection failed',
+            message: 'Database connection failed'
         });
     }
 });
 
+
+// =========================
 // USER REGISTRATION
+// =========================
+
 app.post('/api/register', async (req, res) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
@@ -122,10 +165,9 @@ app.post('/api/register', async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: 'Passwords do not match.'
-            })
+            });
         }
 
-        // Check if email already exists
         const [existingUsers] = await db.query(
             'SELECT id FROM users WHERE email = ?',
             [cleanEmail]
@@ -138,10 +180,8 @@ app.post('/api/register', async (req, res) => {
             });
         }
 
-        // Hash password
         const passwordHash = await bcrypt.hash(password, 12);
 
-        // Insert new grower account
         await db.query(
             'INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)',
             [cleanName, cleanEmail, passwordHash]
@@ -169,10 +209,14 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
+
+// =========================
 // USER LOGIN
+// =========================
+
 app.post('/api/login', async (req, res) => {
     try {
-        const {email, password } = req.body;
+        const { email, password } = req.body;
 
         if (!email || !password) {
             return res.status(400).json({
@@ -197,7 +241,6 @@ app.post('/api/login', async (req, res) => {
 
         const user = users[0];
 
-        // Compare entered password with stored hash
         const passwordMatch = await bcrypt.compare(
             password,
             user.password_hash
@@ -210,7 +253,6 @@ app.post('/api/login', async (req, res) => {
             });
         }
 
-        // Regenerate session after successful login
         req.session.regenerate((error) => {
             if (error) {
                 console.error('Session error:', error);
@@ -256,9 +298,13 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+
+// =========================
 // CHECK CURRENT LOGIN SESSION
+// =========================
+
 app.get('/api/me', (req, res) => {
-    if(!req.session.user) {
+    if (!req.session.user) {
         return res.status(401).json({
             success: false,
             message: 'You are not logged in.'
@@ -271,99 +317,104 @@ app.get('/api/me', (req, res) => {
     });
 });
 
+
+// =========================
 // SAVE MANGO GRADING RECORD
+// =========================
+
 app.post('/api/mango-grading', async (req, res) => {
-        try {
-            //Check if the user is logged in
-            if (!req.session.user) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Please log in to submit a mango grading record.'
-                });
-            }
-
-            const {
-                mango_variety,
-                weight,
-                maturity_level,
-                skin_color,
-                defects,
-                quality_grade
-            } = req.body;
-
-            //Validate required fields
-            if (
-                !mango_variety ||
-                weight === undefined ||
-                weight === null ||
-                weight === '' ||
-                !maturity_level ||
-                !skin_color ||
-                !quality_grade
-            ) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Please complete all required grading fields.'
-                });
-            }
-
-            const cleanVariety = String(mango_variety).trim();
-            const cleanMaturity = String(maturity_level).trim();
-            const cleanSkinColor = String(skin_color).trim();
-            const cleanGrade = String(quality_grade).trim();
-
-            const mangoWeight =  Number(weight);
-
-            if (
-                !cleanVariety ||
-                !cleanMaturity ||
-                !cleanSkinColor ||
-                !cleanGrade ||
-                cleanVariety.length > 100 ||
-                !Number.isFinite(mangoWeight) ||
-                mangoWeight <= 0 ||
-                mangoWeight > 99999999
-            ) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Please enter valid mango grading information.'
-                });
-            }
-
-            // Insert grading record into the database
-            await db.query(
-                `INSERT INTO mango_grading(user_id, mango_variety, weight, maturity_level, skin_color, defects, quality_grade)
-                VALUES
-                (?, ?, ?, ?, ?, ?, ?)`,
-                [
-                    req.session.user.id,
-                    cleanVariety,
-                    mangoWeight,
-                    cleanMaturity,
-                    cleanSkinColor,
-                    defects ? String(defects).trim() : null,
-                    cleanGrade
-                ]
-            );
-
-            res.status(201).json({
-                success: true,
-                message: 'Mango grading record saved successfully!'
-            });
-        } catch (error) {
-            console.error('Mango grading error:', error);
-
-            res.status(500).json({
+    try {
+        if (!req.session.user) {
+            return res.status(401).json({
                 success: false,
-                message: 'Unable to save mango grading record.'
+                message: 'Please log in to submit a mango grading record.'
             });
         }
-    });
 
- // GET MANGO GRADING RECORDS
+        const {
+            mango_variety,
+            weight,
+            maturity_level,
+            skin_color,
+            defects,
+            quality_grade
+        } = req.body;
+
+        if (
+            !mango_variety ||
+            weight === undefined ||
+            weight === null ||
+            weight === '' ||
+            !maturity_level ||
+            !skin_color ||
+            !quality_grade
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please complete all required grading fields.'
+            });
+        }
+
+        const cleanVariety = String(mango_variety).trim();
+        const cleanMaturity = String(maturity_level).trim();
+        const cleanSkinColor = String(skin_color).trim();
+        const cleanGrade = String(quality_grade).trim();
+
+        const mangoWeight = Number(weight);
+
+        if (
+            !cleanVariety ||
+            !cleanMaturity ||
+            !cleanSkinColor ||
+            !cleanGrade ||
+            cleanVariety.length > 100 ||
+            !Number.isFinite(mangoWeight) ||
+            mangoWeight <= 0 ||
+            mangoWeight > 99999999
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please enter valid mango grading information.'
+            });
+        }
+
+        await db.query(
+            `INSERT INTO mango_grading
+            (user_id, mango_variety, weight, maturity_level, skin_color, defects, quality_grade)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [
+                req.session.user.id,
+                cleanVariety,
+                mangoWeight,
+                cleanMaturity,
+                cleanSkinColor,
+                defects ? String(defects).trim() : null,
+                cleanGrade
+            ]
+        );
+
+        res.status(201).json({
+            success: true,
+            message: 'Mango grading record saved successfully!'
+        });
+
+    } catch (error) {
+        console.error('Mango grading error:', error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Unable to save mango grading record.'
+        });
+    }
+});
+
+
+// =========================
+// GET MANGO GRADING RECORDS
+// =========================
+
 app.get('/api/mango-grading', async (req, res) => {
     try {
-        // Check if user is logged in
         if (!req.session.user) {
             return res.status(401).json({
                 success: false,
@@ -371,7 +422,6 @@ app.get('/api/mango-grading', async (req, res) => {
             });
         }
 
-        // Retrieve only the logged-in user's records
         const [records] = await db.query(
             `SELECT
                 id,
@@ -403,7 +453,137 @@ app.get('/api/mango-grading', async (req, res) => {
     }
 });
 
+
+// =========================
+// SAVE MANGO MONITORING RECORD
+// =========================
+
+app.post('/api/mango-monitoring', async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Please log in to save a monitoring record.'
+            });
+        }
+
+        const {
+            mango_variety,
+            tree_condition,
+            growth_stage,
+            observation_date,
+            remarks
+        } = req.body;
+
+        if (
+            !mango_variety ||
+            !tree_condition ||
+            !growth_stage ||
+            !observation_date
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please complete all required fields.'
+            });
+        }
+
+        const cleanVariety = String(mango_variety).trim();
+        const cleanCondition = String(tree_condition).trim();
+        const cleanStage = String(growth_stage).trim();
+        const cleanDate = String(observation_date).trim();
+        const cleanRemarks = remarks ? String(remarks).trim() : null;
+
+        if (
+            cleanVariety.length > 100 ||
+            cleanCondition.length > 50 ||
+            cleanStage.length > 50 ||
+            !/^\d{4}-\d{2}-\d{2}$/.test(cleanDate) ||
+            Number.isNaN(Date.parse(cleanDate + 'T00:00:00'))
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please enter valid monitoring information.'
+            });
+        }
+
+        await db.query(
+            `INSERT INTO mango_monitoring
+            (user_id, mango_variety, tree_condition, growth_stage, observation_date, remarks)
+            VALUES (?, ?, ?, ?, ?, ?)`,
+            [
+                req.session.user.id,
+                cleanVariety,
+                cleanCondition,
+                cleanStage,
+                cleanDate,
+                cleanRemarks
+            ]
+        );
+
+        res.status(201).json({
+            success: true,
+            message: 'Monitoring record saved successfully!'
+        });
+
+    } catch (error) {
+        console.error('Mango monitoring error:', error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Unable to save monitoring record.'
+        });
+    }
+});
+
+
+// =========================
+// GET MANGO MONITORING RECORDS
+// =========================
+
+app.get('/api/mango-monitoring', async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Please log in to view monitoring records.'
+            });
+        }
+
+        const [records] = await db.query(
+            `SELECT
+                id,
+                mango_variety,
+                tree_condition,
+                growth_stage,
+                observation_date,
+                remarks,
+                created_at
+            FROM mango_monitoring
+            WHERE user_id = ?
+            ORDER BY observation_date DESC, id DESC`,
+            [req.session.user.id]
+        );
+
+        res.json({
+            success: true,
+            records: records
+        });
+
+    } catch (error) {
+        console.error('Retrieve monitoring records error:', error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Unable to retrieve monitoring records.'
+        });
+    }
+});
+
+
+// =========================
 // USER LOGOUT
+// =========================
+
 app.post('/api/logout', (req, res) => {
     req.session.destroy((error) => {
         if (error) {
@@ -422,7 +602,19 @@ app.post('/api/logout', (req, res) => {
     });
 });
 
+
+// =========================
+// SERVE PUBLIC FILES
+// Keep this AFTER protected pages and API routes
+// =========================
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+// =========================
 // START SERVER
+// =========================
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

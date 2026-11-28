@@ -1,0 +1,671 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ManggaSense | Reports</title>
+
+    <style>
+
+        /* ========================= GENERAL STYLING ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        /* ========================= BACKGROUND ========================= */
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(
+                135deg,
+                #a6e6cf,
+                #A9DCCB,
+                #efed7b,
+                #bfe5d8
+            );
+            padding: 35px 20px;
+            color: #365F56;
+        }
+
+        /* ========================= MAIN CONTAINER ========================= */
+
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 22px;
+            box-shadow: 0 12px 35px rgba(40, 109, 99, 0.15);
+        }
+
+        /* ========================= HEADER ========================= */
+
+        .header {
+            text-align: center;
+            padding: 25px 15px;
+            border-bottom: 2px solid #D6EAE1;
+        }
+
+        .header h1 {
+            color: #286D63;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #78958D;
+            font-size: 15px;
+            font-style: italic;
+        }
+
+        /* ========================= BUTTONS ========================= */
+
+        .back-button,
+        .refresh-button {
+            display: inline-block;
+            background: #619C8D;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 11px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .back-button:hover,
+        .refresh-button:hover {
+            background: #286D63;
+            transform: translateY(-2px);
+        }
+
+        .top-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 5px;
+            gap: 10px;
+        }
+
+        /* ========================= SECTION TITLES ========================= */
+
+        .section-title {
+            color: #286D63;
+            font-size: 22px;
+            text-align: center;
+            background: #FAFDFC;
+            border: 2px solid #D6EAE1;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 25px 0 18px;
+        }
+
+        /* ========================= SUMMARY CARDS ========================= */
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .summary-card {
+            background: #FAFDFC;
+            border: 2px solid #8BBDB0;
+            border-radius: 13px;
+            padding: 22px 12px;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            color: #78958D;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .summary-card p {
+            color: #286D63;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* ========================= TABLES ========================= */
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background: #FAFDFC;
+            border: 1px solid #D6EAE1;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th {
+            background: #619C8D;
+            color: white;
+            padding: 14px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        td {
+            padding: 13px;
+            text-align: center;
+            border-bottom: 1px solid #D6EAE1;
+            color: #365F56;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) {
+            background: #F1F9F5;
+        }
+
+        /* ========================= MESSAGES ========================= */
+
+        .empty-message {
+            text-align: center;
+            padding: 22px;
+            color: #78958D;
+        }
+
+        .status-message {
+            text-align: center;
+            color: #78958D;
+            padding: 15px;
+        }
+
+        .error-message {
+            color: #A33A3A;
+            text-align: center;
+            padding: 15px;
+        }
+
+        /* ========================= RESPONSIVE DESIGN ========================= */
+
+        @media (max-width: 750px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header h1 {
+                font-size: 29px;
+            }
+
+            .top-actions {
+                flex-wrap: wrap;
+            }
+
+        }
+
+        @media (max-width: 400px) {
+
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ========================= MAIN CONTAINER ========================= -->
+
+    <main class="main-container">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <h1>ManggaSense Reports</h1>
+
+            <p>
+                Mango Quality and Monitoring Records Summary
+            </p>
+
+        </header>
+
+        <!-- NAVIGATION BUTTONS -->
+
+        <div class="top-actions">
+
+            <a href="/dashboard.html" class="back-button">
+                Back
+            </a>
+
+            <button
+                type="button"
+                class="refresh-button"
+                onclick="loadReports()">
+
+                Refresh Reports
+
+            </button>
+
+        </div>
+
+        <!-- ========================= REPORTS OVERVIEW ========================= -->
+
+        <h2 class="section-title">
+            Reports Overview
+        </h2>
+
+        <section class="summary-cards">
+
+            <div class="summary-card">
+
+                <h3>Total Grading Records</h3>
+
+                <p id="totalGrading">0</p>
+
+            </div>
+
+            <div class="summary-card">
+
+                <h3>Grade A</h3>
+
+                <p id="gradeA">0</p>
+
+            </div>
+
+            <div class="summary-card">
+
+                <h3>Grade B</h3>
+
+                <p id="gradeB">0</p>
+
+            </div>
+
+            <div class="summary-card">
+
+                <h3>Grade C</h3>
+
+                <p id="gradeC">0</p>
+
+            </div>
+
+        </section>
+
+        <!-- ========================= MONITORING SUMMARY ========================= -->
+
+        <h2 class="section-title">
+            Mango Monitoring Summary
+        </h2>
+
+        <section class="summary-cards">
+
+            <div class="summary-card">
+
+                <h3>Total Monitoring Records</h3>
+
+                <p id="totalMonitoring">0</p>
+
+            </div>
+
+        </section>
+
+        <!-- ========================= GRADING RECORDS ========================= -->
+
+        <h2 class="section-title">
+            Recent Mango Quality Grading Records
+        </h2>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Mango Variety</th>
+                        <th>Weight (g)</th>
+                        <th>Maturity</th>
+                        <th>Quality Grade</th>
+                        <th>Date Recorded</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="gradingTableBody">
+
+                    <tr>
+
+                        <td colspan="6" class="empty-message">
+                            Loading grading records...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- ========================= MONITORING RECORDS ========================= -->
+
+        <h2 class="section-title">
+            Recent Mango Monitoring Records
+        </h2>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Mango Variety</th>
+                        <th>Tree Condition</th>
+                        <th>Growth Stage</th>
+                        <th>Observation Date</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="monitoringTableBody">
+
+                    <tr>
+
+                        <td colspan="5" class="empty-message">
+                            Loading monitoring records...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <p id="statusMessage" class="status-message"></p>
+
+    </main>
+
+    <!-- ========================= JAVASCRIPT ========================= -->
+
+    <script>
+
+        // FORMAT DATE
+
+        function formatDate(value) {
+
+            if (!value) {
+                return "N/A";
+            }
+
+            const date = new Date(
+                String(value).replace(" ", "T")
+            );
+
+            if (isNaN(date.getTime())) {
+                return String(value);
+            }
+
+            return date.toLocaleDateString("en-PH");
+
+        }
+
+
+        // ADD TABLE CELL SAFELY
+
+        function addCell(row, value) {
+
+            const cell = document.createElement("td");
+
+            cell.textContent =
+                value === null || value === undefined
+                    ? "N/A"
+                    : String(value);
+
+            row.appendChild(cell);
+
+        }
+
+
+        // DISPLAY GRADING RECORDS
+
+        function displayGradingRecords(records) {
+
+            const tableBody =
+                document.getElementById("gradingTableBody");
+
+            tableBody.replaceChildren();
+
+            if (!records.length) {
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-message">
+                            No grading records found.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+
+            }
+
+            records.slice(0, 10).forEach(record => {
+
+                const row = document.createElement("tr");
+
+                addCell(row, record.id);
+                addCell(row, record.mango_variety);
+                addCell(row, record.weight);
+                addCell(row, record.maturity_level);
+                addCell(row, record.quality_grade);
+                addCell(row, formatDate(record.created_at));
+
+                tableBody.appendChild(row);
+
+            });
+
+        }
+
+
+        // DISPLAY MONITORING RECORDS
+
+        function displayMonitoringRecords(records) {
+
+            const tableBody =
+                document.getElementById("monitoringTableBody");
+
+            tableBody.replaceChildren();
+
+            if (!records.length) {
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-message">
+                            No monitoring records found.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+
+            }
+
+            records.slice(0, 10).forEach(record => {
+
+                const row = document.createElement("tr");
+
+                addCell(row, record.id);
+                addCell(row, record.mango_variety);
+                addCell(row, record.tree_condition);
+                addCell(row, record.growth_stage);
+                addCell(row, formatDate(record.observation_date));
+
+                tableBody.appendChild(row);
+
+            });
+
+        }
+
+
+        // LOAD REPORTS FROM DATABASE
+
+        async function loadReports() {
+
+            const statusMessage =
+                document.getElementById("statusMessage");
+
+            statusMessage.textContent =
+                "Loading reports...";
+
+            statusMessage.className = "status-message";
+
+            try {
+
+                const [gradingResponse, monitoringResponse] =
+                    await Promise.all([
+
+                        fetch("/api/mango-grading", {
+                            credentials: "same-origin"
+                        }),
+
+                        fetch("/api/mango-monitoring", {
+                            credentials: "same-origin"
+                        })
+
+                    ]);
+
+                if (
+                    gradingResponse.status === 401 ||
+                    monitoringResponse.status === 401
+                ) {
+
+                    window.location.replace("/");
+                    return;
+
+                }
+
+                const gradingResult =
+                    await gradingResponse.json();
+
+                const monitoringResult =
+                    await monitoringResponse.json();
+
+                if (
+                    !gradingResponse.ok ||
+                    !monitoringResponse.ok ||
+                    !gradingResult.success ||
+                    !monitoringResult.success
+                ) {
+
+                    throw new Error(
+                        gradingResult.message ||
+                        monitoringResult.message ||
+                        "Unable to load reports."
+                    );
+
+                }
+
+                const gradingRecords =
+                    gradingResult.records || [];
+
+                const monitoringRecords =
+                    monitoringResult.records || [];
+
+
+                // COUNT QUALITY GRADES
+
+                const gradeACount = gradingRecords.filter(
+                    record =>
+                        ["A", "GRADE A"].includes(
+                            String(record.quality_grade).toUpperCase()
+                        )
+                ).length;
+
+                const gradeBCount = gradingRecords.filter(
+                    record =>
+                        ["B", "GRADE B"].includes(
+                            String(record.quality_grade).toUpperCase()
+                        )
+                ).length;
+
+                const gradeCCount = gradingRecords.filter(
+                    record =>
+                        ["C", "GRADE C"].includes(
+                            String(record.quality_grade).toUpperCase()
+                        )
+                ).length;
+
+
+                // UPDATE SUMMARY
+
+                document.getElementById("totalGrading").textContent =
+                    gradingRecords.length;
+
+                document.getElementById("gradeA").textContent =
+                    gradeACount;
+
+                document.getElementById("gradeB").textContent =
+                    gradeBCount;
+
+                document.getElementById("gradeC").textContent =
+                    gradeCCount;
+
+                document.getElementById("totalMonitoring").textContent =
+                    monitoringRecords.length;
+
+
+                // UPDATE TABLES
+
+                displayGradingRecords(gradingRecords);
+
+                displayMonitoringRecords(monitoringRecords);
+
+                statusMessage.textContent =
+                    "Reports successfully loaded.";
+
+            } catch (error) {
+
+                console.error("Reports loading error:", error);
+
+                statusMessage.textContent =
+                    error.message ||
+                    "Unable to load reports. Please try again.";
+
+                statusMessage.className = "error-message";
+
+            }
+
+        }
+
+
+        // LOAD REPORTS WHEN PAGE OPENS
+
+        loadReports();
+
+    </script>
+
+</body>
+
+</html>

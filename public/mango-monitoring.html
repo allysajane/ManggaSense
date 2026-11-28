@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ManggaSense | Mango Monitoring</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #a6e6cf, #efed7b);
+            padding: 35px 20px;
+            color: #365F56;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 12px 35px rgba(40, 109, 99, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #286D63;
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #78958D;
+            margin-bottom: 20px;
+        }
+
+        .form-section {
+            background: #FAFDFC;
+            border: 2px solid #D6EAE1;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #365F56;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #B8D9C9;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        button, .back-button {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #619C8D;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        button:hover, .back-button:hover {
+            background: #286D63;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #286D63;
+        }
+
+        .monitoring-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .monitoring-table th,
+        .monitoring-table td {
+            border: 1px solid #D6EAE1;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .monitoring-table th {
+            background: #E4F3EB;
+            color: #286D63;
+        }
+
+        .empty-message {
+            color: #78958D;
+            padding: 20px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .form-section {
+                padding: 18px;
+            }
+
+            .monitoring-table th,
+            .monitoring-table td {
+                padding: 9px;
+                font-size: 13px;
+            }
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1> Mango Monitoring</h1>
+
+        <p class="subtitle">
+            Record and monitor the condition and development of your mango trees.
+        </p>
+
+        <!-- MONITORING FORM -->
+
+        <section class="form-section">
+
+            <h2 class="section-title">Add Monitoring Record</h2>
+
+            <form id="monitoringForm">
+
+                <div class="form-group">
+                    <label for="mangoVariety">Mango Variety</label>
+
+                    <select id="mangoVariety" required>
+                        <option value=""> Select Mango Variety</option>
+                        <option value="Carabao">Carabao</option>
+                        <option value="Indian Mango">Indian Mango</option>
+                        <option value="Pico">Pico</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="treeCondition">Tree Condition</label>
+
+                    <select id="treeCondition" required>
+                        <option value="">Select Tree Condition</option>
+                        <option value="Healthy">Healthy</option>
+                        <option value="Needs Attention">Needs Attention</option>
+                        <option value="Poor">Poor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="growthStage">Growth Stage</label>
+
+                    <select id="growthStage" required>
+                        <option value="">Select Growth Stage</option>
+                        <option value="Vegetative">Vegetative</option>
+                        <option value="Flowering">Flowering</option>
+                        <option value="Fruiting">Fruiting</option>
+                        <option value="Mature Fruit">Mature Fruit</option>
+                        <option value="Post-Harvest">Post-Harvest</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="observationDate">Observation Date</label>
+                    <input type="date" id="observationDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="remarks">Remarks / Observations</label>
+                    <textarea
+                        id="remarks"
+                        placeholder="Enter additional observations..."
+                    ></textarea>
+                </div>
+
+                <button type="submit">Save Monitoring Record</button>
+
+                <p class="message" id="message"></p>
+
+            </form>
+
+        </section>
+
+        <!-- MONITORING RECORDS -->
+
+        <section>
+
+            <h2 class="section-title">Monitoring Records</h2>
+
+            <div class="table-wrapper">
+
+                <table class="monitoring-table">
+
+                    <thead>
+                        <tr>
+                            <th>Mango Variety</th>
+                            <th>Tree Condition</th>
+                            <th>Growth Stage</th>
+                            <th>Observation Date</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="monitoringTable">
+
+                        <tr>
+                            <td colspan="5" class="empty-message">
+                                No monitoring records available yet.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <div class="button-group">
+
+            <a href="/dashboard.html" class="back-button">
+                ← Back
+            </a>
+
+        </div>
+
+    </main>
+
+    <script>
+
+        const monitoringForm = document.getElementById("monitoringForm");
+        const monitoringTable = document.getElementById("monitoringTable");
+        const message = document.getElementById("message");
+
+        // LOAD SAVED MONITORING RECORDS
+
+        async function loadMonitoringRecords() {
+            try {
+                const response = await fetch("/api/mango-monitoring");
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || "Unable to load records.");
+                }
+
+                monitoringTable.innerHTML = "";
+
+                if (result.records.length === 0) {
+                    monitoringTable.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="empty-message">
+                                No monitoring records available yet.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                result.records.forEach(function(record) {
+                    const row = document.createElement("tr");
+
+                    const date = new Date(
+                        record.observation_date + "T00:00:00"
+                    )
+
+                    const values = [
+                        record.mango_variety,
+                        record.tree_condition,
+                        record.growth_stage,
+                        date.toLocaleDateString("en-PH"),
+                        record.remarks || "None"
+                ];
+
+                values.forEach(function(value) {
+                    const cell = document.createElement("td");
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
+                monitoringTable.appendChild(row);
+            });
+
+        } catch (error) {
+            console.error("Loading monitoring records error:", error);
+            message.textContent = error.message;
+        }
+    }
+
+
+    // SAVE MONITORING RECORD
+    monitoringForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const variety = document.getElementById("mangoVariety").value;
+        const condition = document.getElementById("treeCondition").value;
+        const stage = document.getElementById("growthStage").value;
+        const date = document.getElementById("observationDate").value;
+        const remarks = document.getElementById("remarks").value;
+
+        if (!variety || !condition || !stage || !date) {
+            message.textContent = "Please complete all required fields.";
+            return;
+        }
+
+        const selectedDate = new Date(date + "T00:00:00");
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate > today) {
+            message.textContent = "Please select a valid observation date.";
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/mango-monitoring", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    mango_variety: variety,
+                    tree_condition: condition,
+                    growth_stage: stage,
+                    observation_date: date,
+                    remarks: remarks
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Unable to save record.");
+            }
+
+            message.textContent = "Monitoring record saved successfully!";
+
+            monitoringForm.reset();
+
+            await loadMonitoringRecords();
+
+        } catch (error) {
+            console.error("Saving monitoring record error:", error);
+            message.textContent = error.message;
+        }
+    });
+
+    // DISPLAY RECORDS WHEN PAGE OPENS
+    loadMonitoringRecords();
+
+    </script>
+
+</body>
+
+</html>

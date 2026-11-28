@@ -1,9 +1,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>ManggaSense | Mango Quality Grading</title>
 
     <style>
@@ -155,6 +157,7 @@
             background: #8BBDB0;
         }
 
+        /* VIEW RECORDS BUTTON */
         .records-button {
             display: block;
             width: 100%;
@@ -172,10 +175,6 @@
 
         .records-button:hover {
             background: #245F58;
-        }
-
-        .hidden {
-            display: none;
         }
 
         #message {
@@ -289,13 +288,16 @@
 
         <div class="result-box">
             <h2>Automatic Quality Assessment</h2>
+
             <div id="gradeResult">Not Graded</div>
+
             <p id="gradeDescription">
                 Complete the form to calculate the quality grade.
             </p>
         </div>
 
         <div class="button-group">
+
             <button type="submit" id="saveButton">
                 Save Grading Result
             </button>
@@ -303,15 +305,14 @@
             <button type="reset" class="clear-button">
                 Clear Form
             </button>
+
         </div>
 
         <p id="message"></p>
 
-        <!-- VIEW GRADING RECORDS BUTTON -->
-        <a href="/mango-records.html"
-           id="viewRecordsButton"
-           class="records-button hidden">
-            View Grading Records
+        <!-- PERMANENT VIEW RECORDS BUTTON -->
+        <a href="/mango-records.html" class="records-button">
+            View Records
         </a>
 
         <p class="note">
@@ -322,28 +323,45 @@
         </p>
 
     </form>
+
 </div>
 
 <script>
+
     const form = document.getElementById("gradingForm");
+
     const gradeResult = document.getElementById("gradeResult");
-    const gradeDescription = document.getElementById("gradeDescription");
+
+    const gradeDescription =
+        document.getElementById("gradeDescription");
+
     const message = document.getElementById("message");
+
     const saveButton = document.getElementById("saveButton");
-    const viewRecordsButton = document.getElementById("viewRecordsButton");
 
     let calculatedGrade = "";
 
+    // AUTOMATIC QUALITY GRADING
     function calculateGrade() {
-        const maturity = document.getElementById("maturityLevel").value;
-        const defects = document.getElementById("defects").value;
-        const skinColor = document.getElementById("skinColor").value;
+
+        const maturity =
+            document.getElementById("maturityLevel").value;
+
+        const defects =
+            document.getElementById("defects").value;
+
+        const skinColor =
+            document.getElementById("skinColor").value;
 
         if (!maturity || !defects || !skinColor) {
+
             calculatedGrade = "";
+
             gradeResult.textContent = "Not Graded";
+
             gradeDescription.textContent =
                 "Complete the required fields to calculate the grade.";
+
             return;
         }
 
@@ -352,6 +370,7 @@
             maturity === "Unripe" ||
             maturity === "Overripe"
         ) {
+
             calculatedGrade = "Grade C";
 
             gradeDescription.textContent =
@@ -363,45 +382,69 @@
              skinColor === "Golden Yellow") &&
             defects === "None"
         ) {
+
             calculatedGrade = "Grade A";
 
             gradeDescription.textContent =
                 "The mango meets the prototype's highest quality criteria.";
 
         } else {
+
             calculatedGrade = "Grade B";
 
             gradeDescription.textContent =
                 "The mango meets the prototype's intermediate quality criteria.";
+
         }
 
         gradeResult.textContent = calculatedGrade;
+
     }
 
+    // RECALCULATE WHEN GRADING FIELDS CHANGE
     ["maturityLevel", "skinColor", "defects"].forEach(id => {
+
         document.getElementById(id).addEventListener(
             "change",
             calculateGrade
         );
+
     });
 
+    // SAVE GRADING RESULT
     form.addEventListener("submit", async function(event) {
+
         event.preventDefault();
 
         calculateGrade();
 
         if (!calculatedGrade) {
-            message.textContent = "Please complete all required fields.";
+
+            message.textContent =
+                "Please complete all required fields.";
+
             return;
         }
 
         const gradingData = {
-            mango_variety: document.getElementById("mangoVariety").value.trim(),
-            weight: document.getElementById("weight").value,
-            maturity_level: document.getElementById("maturityLevel").value,
-            skin_color: document.getElementById("skinColor").value,
-            defects: document.getElementById("defects").value,
+
+            mango_variety:
+                document.getElementById("mangoVariety").value.trim(),
+
+            weight:
+                document.getElementById("weight").value,
+
+            maturity_level:
+                document.getElementById("maturityLevel").value,
+
+            skin_color:
+                document.getElementById("skinColor").value,
+
+            defects:
+                document.getElementById("defects").value,
+
             quality_grade: calculatedGrade
+
         };
 
         if (
@@ -409,49 +452,66 @@
             !gradingData.weight ||
             Number(gradingData.weight) <= 0
         ) {
-            message.textContent = "Please enter a valid variety and weight.";
+
+            message.textContent =
+                "Please enter a valid variety and weight.";
+
             return;
         }
 
         message.style.color = "#286D63";
+
         message.textContent = "Saving grading record...";
+
         saveButton.disabled = true;
 
         try {
+
             const response = await fetch("/api/mango-grading", {
+
                 method: "POST",
+
                 headers: {
                     "Content-Type": "application/json"
                 },
+
                 body: JSON.stringify(gradingData)
+
             });
 
             const result = await response.json();
 
             if (!response.ok) {
+
                 throw new Error(
                     result.message || "Unable to save record."
                 );
+
             }
 
             message.textContent =
-                result.message || "Mango grading record saved successfully!";
+                result.message ||
+                "Mango grading record saved successfully!";
 
             message.style.color = "#286D63";
 
-            // SHOW VIEW RECORDS BUTTON AFTER SUCCESSFUL SAVE
-            viewRecordsButton.classList.remove("hidden");
-
         } catch (error) {
+
             message.textContent = error.message;
+
             message.style.color = "#B54747";
 
         } finally {
+
             saveButton.disabled = false;
+
         }
+
     });
 
+    // CLEAR FORM
     form.addEventListener("reset", function() {
+
         calculatedGrade = "";
 
         gradeResult.textContent = "Not Graded";
@@ -461,9 +521,8 @@
 
         message.textContent = "";
 
-        // HIDE THE RECORDS BUTTON WHEN CLEARING THE FORM
-        viewRecordsButton.classList.add("hidden");
     });
+
 </script>
 
 </body>
